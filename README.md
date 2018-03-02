@@ -44,36 +44,89 @@ However in order to get this, we will need to take the query string and grab wha
 const URL = new URL(location.href);
 const tokens = {
     access_token: url.searchParams.get('access_token'),
-    refrehs_token: url.searchParams.get('refresh_token')
+    refresh_token: url.searchParams.get('refresh_token')
 };
 ```
 
-```js
-const getToken = () => {
-    return new Promise((resolve,reject) => {
-        $.ajax({
-            url: 'http://localhost:3400/refresh',
-            data: {
-                refresh_token: tokens.refresh_token
-            }
-        })
-        .then((res) => {
-            const { access_token } = JSON.parse(res);
-            resolve(access_token);
-        }); 
-    });
-};
+Here is a one page example of using the proxy, assume that this is running on `localhost:3400` and that has been added as the `APP_URL` for the proxy on heroku.
 
-const getMe = () => {
-    getToken()
-        .then((token) => {
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me',
-                headers: {
-                    'Authorization' : `Bearer ${token}`
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Proxy Test</title>
+</head>
+<body>
+    <!-- The anchor tag to kick off the log in -->
+    <a href="https://spotify-proxy-test.herokuapp.com/auth">Login to Spotify</a>
+    <button>Get info about me!</button>
+    <script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='crossorigin='anonymous'></script>
+
+    <script>
+        const app = {};
+        //Object to store our tokens
+        app.tokenInfo = {};
+        //This method is used to get the token for every request. Since a token only lasts for 3600ms we need to get a new token for each request
+        app.getToken = () => {
+            //Return a promise
+            return new Promise((resolve,reject) => {
+                //Make the request to get the token
+                $.ajax({
+                    url: 'https://spotify-proxy-test.herokuapp.com/refresh',
+                    data: {
+                        //Use the refresh_token we got on load.
+                        refresh_token: app.tokenInfo.refresh_token
+                    }
+                })
+                .then((res) => {
+                    //Grab the new token and return it.
+                    const { access_token } = JSON.parse(res);
+                    resolve(access_token);
+                }); 
+            });
+        };
+
+        app.getMe = () => {
+            //Before each call, use the getToken method to get a new token
+            app.getToken()
+                .then((token) => {
+                    //then use the token in a header
+                    $.ajax({
+                        url: 'https://api.spotify.com/v1/me',
+                        headers: {
+                            'Authorization' : `Bearer ${token}`
+                        }
+                    })
+                    .then(console.log);
+                });
+        };
+
+        app.events = () => {
+            $('button').on('click',() => {
+                app.getMe();
+            });
+        };     
+
+        app.init = () => {
+            //On load of the app check to see if there is a query string in the URL.
+            //If not, the user needs to click the a tag in the page
+            if(location.search !== "") {
+                const url = new URL(location.href);
+                //Grab the info
+                app.tokenInfo = {
+                    access_token: url.searchParams.get('access_token'),
+                    refresh_token: url.searchParams.get('refresh_token')
                 }
-            })
-            .then(console.log);
-        });
-};
+                //call any events
+                app.events();
+            }
+        }
+
+        $(app.init);
+    </script>
+</body>
+</html>
 ```
