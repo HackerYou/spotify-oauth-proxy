@@ -20,7 +20,7 @@ app.get('/auth',(req,res) => {
         qs.stringify({
             response_type: 'code',
             client_id: process.env.CLIENT_ID,
-            redirect_uri: `${process.env.APP_URL}/redirect`
+            redirect_uri: `${process.env.SERVER_URL}/redirect`
         }));
 });
 
@@ -33,14 +33,14 @@ app.get('/redirect',(req,res) => {
         form: {
             grant_type: 'authorization_code',
             code: code,
-            redirect_uri: `${process.env.APP_URL}/redirect`
+            redirect_uri: `${process.env.SERVER_URL}/redirect`
         },
         json: true,
         headers: {
             'Authorization': `Basic ${new Buffer(base64Token).toString('base64')}`
         }
     },(err,response,body) => {
-        res.redirect(`${process.env.SERVER_URL}?${qs.stringify(body)}`);
+        res.redirect(`${process.env.APP_URL}?${qs.stringify(body)}`);
     });
 });
 
