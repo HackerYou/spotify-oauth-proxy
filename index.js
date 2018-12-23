@@ -20,7 +20,8 @@ app.get('/auth',(req,res) => {
         qs.stringify({
             response_type: 'code',
             client_id: process.env.CLIENT_ID,
-            redirect_uri: `${process.env.SERVER_URL}/redirect`
+            redirect_uri: `${process.env.SERVER_URL}/redirect`,
+            scope: `${process.env.SCOPE}`
         }));
 });
 
