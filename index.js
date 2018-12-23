@@ -21,7 +21,7 @@ app.get('/auth',(req,res) => {
             response_type: 'code',
             client_id: process.env.CLIENT_ID,
             redirect_uri: `${process.env.SERVER_URL}/redirect`,
-            scope: `${process.env.SCOPE}`
+            scope: `${process.env.SCOPES}`
         }));
 });
 
