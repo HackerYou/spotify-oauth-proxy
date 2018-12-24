@@ -69,15 +69,16 @@ app.get('/guest', (req,res) => {
 
     request({
         url: 'https://accounts.spotify.com/api/token',
-        method: 'post',
+        method: 'POST',
         form: {
             grant_type: 'client_credentials',
         },
+        json: true,
         headers: {
             'Authorization': `Basic ${new Buffer(base64Token).toString('base64')}`
         }
     },(err,response,body) => {
-        res.send(body);
+        // res.send(body);
         res.redirect(`${process.env.APP_URL}?${qs.stringify(body)}`);
     });
 });
