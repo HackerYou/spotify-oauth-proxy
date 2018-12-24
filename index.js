@@ -63,4 +63,22 @@ app.get('/refresh',(req,res) => {
     });
 });
 
+// Client credentials flow - guest authorization procedure
+app.get('/guest', (req,res) => {
+    const base64Token = `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`  
+
+    request({
+        url: 'https://accounts.spotify.com/api/token',
+        method: 'post',
+        form: {
+            grant_type: 'client_credentials',
+        },
+        headers: {
+            'Authorization': `Basic ${new Buffer(base64Token).toString('base64')}`
+        }
+    },(err,response,body) => {
+        res.send(body);
+    });
+});
+
 app.listen(process.env.PORT || '3400');
