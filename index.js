@@ -77,7 +77,7 @@ app.get('/guest', (req,res) => {
             'Authorization': `Basic ${new Buffer(base64Token).toString('base64')}`
         }
     },(err,response,body) => {
-        res.send(body);
+        res.redirect(`${process.env.APP_URL}?${qs.stringify(body)}`);
     });
 });
 
