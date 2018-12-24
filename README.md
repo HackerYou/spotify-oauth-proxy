@@ -2,7 +2,7 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-This is a deployable server that allows you to use the Spotify Authorization Code Flow to create an application with the need to build your own server.
+This is a deployable server that allows you to use either the Spotify Authorization Code Flow or Client Credentials Flow, or both, to create an application with the need to build your own server.
 
 Key | Value
 ---  | ---
@@ -21,7 +21,7 @@ Here is the workflow for working with this server in your front-end application.
 Create a link that goes to the deployed servers URL and the `/auth` endpoint.
 
 ```html
- <a href="https://someapp.herokuapp.com/auth">Login to Spotify</a>
+<a href="https://someapp.herokuapp.com/auth">Login to Spotify</a>
 ```
 
 Where `https://someapp.herokuapp.com` is your URL for the heroku server.
