@@ -16,7 +16,7 @@ When you deploy to Heroku go to your application in the dashboard and click on t
 
 ## Workflow: Authorization Code Flow
 
-Here is the workflow for working with this server in your front-end application.
+Here is the workflow for working with this server in your front-end application. This authorization flow requires the user to grant permission for your app to use their credentials to obtain an access token and refresh token. More information on this flow can be found [here](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow). 
 
 Create a link that goes to the deployed servers URL and the `/auth` endpoint.
 
@@ -134,7 +134,17 @@ Here is a one page example of using the proxy, assume that this is running on `l
 
 ## Workflow: Client Credentials Flow
 
-If you want to allow users to access your app without authorizing Spotify, you can use the client credentials flow. 
+If you want to allow users to access your app without authorizing Spotify, you can use the client credentials flow. Note that this flow does not require you to define any scopes in the `Reveal Config Vars` section of your deployed app (however, this also means your application can only access publicly available endpoints and data). More information on this flow can be found [here](https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow). 
+
+Create a link that goes to the deployed servers URL and the `/guest` endpoint.
+
+```html
+<a href="https://someapp.herokuapp.com/guest">Continue as guest</a>
+```
+
+Where `https://someapp.herokuapp.com` is your URL for the heroku server.
+
+This will send the request to Spotify's API token endpoint, which then redirects back to your application with an object containing the guest access token.
 
 Here is a one page example of using the proxy, assume that this is running on `localhost:3400` and that has been added as the `APP_URL` for the proxy on heroku.
 
@@ -149,25 +159,21 @@ Here is a one page example of using the proxy, assume that this is running on `l
 </head>
 <body>
     <!-- The anchor tag to kick off the log in -->
-    <a href="https://spotify-proxy-test.herokuapp.com/auth">Login to Spotify</a>
-    <button>Get info about me!</button>
+    <a href="https://spotify-proxy-test.herokuapp.com/guest">Continue as guest</a>
     <script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='crossorigin='anonymous'></script>
 
     <script>
         const app = {};
         //Object to store our tokens
         app.tokenInfo = {};
+
         //This method is used to get the token for every request. Since a token only lasts for 3600ms we need to get a new token for each request
         app.getToken = () => {
             //Return a promise
             return new Promise((resolve,reject) => {
                 //Make the request to get the token
                 $.ajax({
-                    url: 'https://spotify-proxy-test.herokuapp.com/refresh',
-                    data: {
-                        //Use the refresh_token we got on load.
-                        refresh_token: app.tokenInfo.refresh_token
-                    }
+                    url: 'https://spotify-proxy-test.herokuapp.com/guestrefresh'
                 })
                 .then((res) => {
                     //Grab the new token and return it.
@@ -175,28 +181,7 @@ Here is a one page example of using the proxy, assume that this is running on `l
                     resolve(access_token);
                 }); 
             });
-        };
-
-        app.getMe = () => {
-            //Before each call, use the getToken method to get a new token
-            app.getToken()
-                .then((token) => {
-                    //then use the token in a header
-                    $.ajax({
-                        url: 'https://api.spotify.com/v1/me',
-                        headers: {
-                            'Authorization' : `Bearer ${token}`
-                        }
-                    })
-                    .then(console.log);
-                });
-        };
-
-        app.events = () => {
-            $('button').on('click',() => {
-                app.getMe();
-            });
-        };     
+        };    
 
         app.init = () => {
             //On load of the app check to see if there is a query string in the URL.
@@ -206,10 +191,7 @@ Here is a one page example of using the proxy, assume that this is running on `l
                 //Grab the info
                 app.tokenInfo = {
                     access_token: url.searchParams.get('access_token'),
-                    refresh_token: url.searchParams.get('refresh_token')
-                }
-                //call any events
-                app.events();
+                 }
             }
         }
 
