@@ -225,4 +225,4 @@ In this instance, you will need to create two separate login links, one that goe
 <a href="https://someapp.herokuapp.com/guest">Continue as guest</a>
 ```
 
-Depending on which option the user selects, the request will be sent to the appropriate API endpoint, and will then redirect back to your application with an object containing either the guest access token or the guest and refresh access tokens.
+Depending on which option the user selects, the request will be sent to the appropriate API endpoint, and will then redirect back to your application with an object containing either the guest access token or the guest and refresh access tokens. The same base code can be used as in the examples above.
