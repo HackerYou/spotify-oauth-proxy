@@ -38,7 +38,7 @@ Create a link that goes to the deployed servers URL and the `/auth` endpoint, wh
 <a href="https://someapp.herokuapp.com/auth">Login to Spotify</a>
 ```
 
-When the user clicks on the link, it will send the request to Spotify, which then redirects to the servers `/redirect` endpoint. From there it will take the returned data and then send the proper info to the next stop, which is the token step. Once that is completed it will redirect to your application with an object that looks like this as a query string.
+When the user clicks on the link, it will send the request to Spotify, which then redirects to the server's `/redirect` endpoint. From there it will take the returned data and then send the proper info to the next stop, which is the token step. Once that is completed it will redirect to your application with an object that looks like this as a query string.
 
 On Spotify in the application dashboard for the API click the `edit settings` button and make sure you add `https://someapp.herokuapp.com/redirect` in the redirects URI's section.
 
