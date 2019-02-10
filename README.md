@@ -146,7 +146,7 @@ Here is a one page example of using the proxy, assume that this is running on `l
 
 ### Client Credentials Flow (Guest Access) <a name="clientflow"></a>
 
-If you want to allow users to access your app without authorizing Spotify, you can use the client credentials flow. Note that this flow does not require you to define any scopes in the `Reveal Config Vars` section of your deployed app (however, this also means your application can only access publicly available endpoints and data). More information on this flow can be found [here](https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow). 
+If you want to allow users to access your app without requiring them to authorize with Spotify, you can use the client credentials flow. Note that this flow does not require you to define any scopes in the `Reveal Config Vars` section of your deployed app (however, this also means your application can only access publicly available endpoints and data). More information on this flow can be found [here](https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow). 
 
 Create a link that goes to the deployed servers URL and the `/guest` endpoint, where `https://someapp.herokuapp.com` is your URL for the heroku server..
 
