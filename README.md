@@ -25,7 +25,7 @@ This is a deployable server that allows you to use either the Spotify Authorizat
 | SERVER_URL        | URL for the deployed herokuapp                                                                                                                                                                                                                                                                                                  |
 | SCOPES (optional) | The authorization scopes you want the user to grant; scopes should be separated with a space. A full list of available scopes can be found [here](https://developer.spotify.com/documentation/general/guides/scopes/). If no scopes are specified, authorization will be granted only to access publicly available information. |
 
-When you deploy to Heroku go to your application in the dashboard and click on the settings tab. There you can click `Reveal Config Vars`, and make sure you add the five from above.
+When you deploy to Heroku go to your application in the dashboard and click on the settings tab. There you can click `Reveal Config Vars`, and add the above.
 
 ## Workflows <a name="workflows"></a>
 
